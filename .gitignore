@@ -1,0 +1,29 @@
+# =============================================================
+# O QUE SOBE PARA A VERSAO ONLINE DO PAINEL
+# =============================================================
+# Regra: TUDO fica de fora, exceto o que esta liberado abaixo com "!".
+# Assim nada sobe por engano (IFC, planilhas, regras, _ARQUIVO...).
+# Para publicar um arquivo novo, e preciso libera-lo aqui de proposito.
+# =============================================================
+
+# tudo fora...
+*
+# ...mas o git pode entrar nas pastas para achar os liberados
+!*/
+
+# esta propria lista
+!.gitignore
+
+# o painel (so os .py da pasta; os do _ARQUIVO continuam fora)
+!PAINEL/*.py
+!PAINEL/requirements.txt
+!PAINEL/.streamlit/config.toml
+!PAINEL/static/malhas/*
+
+# os dois scripts da etapa 4 que o painel usa
+!4 QUANTITATIVOS/SCRIPTS/config.py
+!4 QUANTITATIVOS/SCRIPTS/verificacoes.py
+
+# os resultados que o painel mostra (so o mais recente fica nessas pastas)
+!4 QUANTITATIVOS/3 RESULTADOS/*.json
+!5 ORCAMENTO/3 RESULTADOS/*.json

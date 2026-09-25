@@ -1,0 +1,7 @@
+# Bibliotecas que o servidor online instala para rodar o painel.
+# O Streamlit fica fixo na mesma versao deste computador.
+# openpyxl: o botao "Baixar em Excel" dos relatorios.
+# (O ifcopenshell nao entra: online o 3D ja vem pronto.)
+streamlit==1.63.0
+pandas
+openpyxl

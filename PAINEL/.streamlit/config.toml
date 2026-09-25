@@ -1,0 +1,9 @@
+# Configuracao do painel (lida por estar ao lado do app_painel.py)
+
+[server]
+# Permite ao navegador buscar as malhas 3D em PAINEL\static\malhas\
+enableStaticServing = true
+
+[browser]
+# Nao enviar estatisticas de uso ao Streamlit
+gatherUsageStats = false
