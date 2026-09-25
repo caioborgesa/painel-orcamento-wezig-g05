@@ -368,8 +368,10 @@ if config.MODO_ONLINE:
     st.caption(f":material/public: Versao de consulta{texto_da_publicacao} · quantitativo de "
                f"{formatar_data(carimbo_do_quantitativo)}{texto_do_orcamento}")
 
+# on_change="rerun": trocar de aba atualiza o app, e cada aba sabe se esta
+# aberta (.open). Assim so o relatorio da aba aberta e desenhado.
 abas = st.tabs(["Auditoria", "Sintetico", "Analitico", "ABC de insumos",
-                "ABC de servicos", "Resumo"])
+                "ABC de servicos", "Resumo"], key="aba_aberta", on_change="rerun")
 
 # Os relatorios sao desenhados ANTES da aba de auditoria de proposito: a
 # auditoria tem um st.stop() para o caso de nenhum modelo ter sido medido,
@@ -378,6 +380,10 @@ for numero_da_aba, desenhar in enumerate(
         [relatorios.aba_sintetico, relatorios.aba_analitico,
          relatorios.aba_abc_insumos, relatorios.aba_abc_servicos,
          relatorios.aba_resumo], start=1):
+    # Relatorio fechado nao e desenhado: antes, cada clique na arvore
+    # refazia os 5 relatorios (~97% do tempo e dos dados de cada clique)
+    if not abas[numero_da_aba].open:
+        continue
     with abas[numero_da_aba]:
         if orcamento:
             desenhar(orcamento)
