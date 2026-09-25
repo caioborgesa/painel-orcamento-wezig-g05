@@ -17,6 +17,7 @@
 # o painel (so os .py da pasta; os do _ARQUIVO continuam fora)
 !PAINEL/*.py
 !PAINEL/requirements.txt
+!PAINEL/publicacao.txt
 !PAINEL/.streamlit/config.toml
 !PAINEL/static/malhas/*
 

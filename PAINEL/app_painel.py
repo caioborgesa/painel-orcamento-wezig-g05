@@ -125,6 +125,17 @@ def indice_de_elementos(caminho, modificado_em):
     return indice
 
 
+def versao_publicada():
+    """Carimbo da ultima publicacao online ('2026-09-25 1640'), ou None.
+
+    O "PUBLICAR PAINEL ONLINE.bat" grava esse carimbo em publicacao.txt a
+    cada envio. Online ele aparece no topo — e o jeito de conferir que o
+    link ja mostra a versao nova.
+    """
+    arquivo = PASTA_PAINEL / "publicacao.txt"
+    return arquivo.read_text(encoding="utf-8").strip() if arquivo.exists() else None
+
+
 @st.cache_resource(max_entries=10)
 def malha_do_modelo(nome_do_modelo, caminho_do_ifc, versao_do_ifc):
     # 'versao_do_ifc' entra so para o cache refazer quando o IFC mudar
@@ -352,7 +363,9 @@ if config.MODO_ONLINE:
     texto_do_orcamento = (
         f" · orcamento de {formatar_data(arquivo_do_orcamento.stem.split(' ', 2)[-1])}"
         if arquivo_do_orcamento else "")
-    st.caption(f":material/public: Versao de consulta · quantitativo de "
+    publicada = versao_publicada()
+    texto_da_publicacao = f" · publicada em {formatar_data(publicada)}" if publicada else ""
+    st.caption(f":material/public: Versao de consulta{texto_da_publicacao} · quantitativo de "
                f"{formatar_data(carimbo_do_quantitativo)}{texto_do_orcamento}")
 
 abas = st.tabs(["Auditoria", "Sintetico", "Analitico", "ABC de insumos",
@@ -553,10 +566,9 @@ with abas[0]:
         for nome in modelos_medidos:
             if config.MODO_ONLINE:
                 # Online nao ha IFC: usa a malha publicada junto com o painel.
-                # A data do IFC (gravada no quantitativo) faz o cache recarregar
-                # o 3D quando um quantitativo novo for publicado.
-                malha = malha_do_modelo(nome, None,
-                                        procedencia["modelos"][nome].get("modificado_em"))
+                # O carimbo da publicacao faz o cache recarregar o 3D a cada
+                # envio (sem ele, o servidor seguia com o 3D da 1a publicacao).
+                malha = malha_do_modelo(nome, None, versao_publicada())
                 if malha is None:
                     st.warning(f"O 3D do modelo {nome} nao foi publicado.",
                                icon=":material/view_in_ar:")
