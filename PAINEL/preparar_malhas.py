@@ -67,8 +67,13 @@ PASTA_MALHAS = PASTA_PAINEL / "static" / "malhas"
 
 def url_da_malha(nome_do_modelo, versao):
     """Endereco da malha no app. O '?v=' muda quando o IFC muda, para o
-    navegador nao reaproveitar uma malha antiga guardada em cache."""
-    return f"/app/static/malhas/malha_{nome_do_modelo}.glb?v={versao.replace(' ', '_')}"
+    navegador nao reaproveitar uma malha antiga guardada em cache.
+
+    O endereco e RELATIVO (sem "/" no inicio): o navegador completa a partir
+    da pagina do painel. No computador a pagina e "localhost:8501/"; online
+    o Streamlit Cloud serve o app em ".../~/+/", e um endereco com "/" no
+    inicio pularia essa parte e cairia na tela de login."""
+    return f"app/static/malhas/malha_{nome_do_modelo}.glb?v={versao.replace(' ', '_')}"
 
 
 def pavimento_do_elemento(elemento_ifc, traducao):
