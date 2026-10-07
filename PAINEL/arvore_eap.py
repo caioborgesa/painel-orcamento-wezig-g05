@@ -30,7 +30,7 @@
 import streamlit as st
 
 # Status que contam como "linha com medida" na contagem dos niveis
-STATUS_COM_MEDIDA = ("EXTRAIDO", "ARBITRADO", "VERIFICADO", "DIVERGENTE")
+STATUS_COM_MEDIDA = ("MEDIDO NO MODELO", "ARBITRADO", "VERIFICADO", "DIVERGENTE")
 
 
 def montar_nos(linhas):
@@ -167,12 +167,16 @@ CSS = """
   justify-self: start;
   background: rgba(128, 128, 128, 0.15);
 }
-.s-EXTRAIDO { background: rgba(28, 126, 214, 0.18); }
+/* O nome da classe vem do status, com o espaco virando hifen (ver o
+   replace no JS mais abaixo). Azul = medido; verde = conferido; roxo =
+   posto a mao; laranja = o modelo nao tem; vermelho = erro. */
+.s-MEDIDO-NO-MODELO { background: rgba(28, 126, 214, 0.18); }
 .s-VERIFICADO { background: rgba(47, 158, 68, 0.22); }
 .s-ARBITRADO { background: rgba(132, 94, 247, 0.2); }
 .s-DIVERGENTE, .s-REGRA-DESATUALIZADA { background: rgba(224, 49, 49, 0.2); }
-.s-SEM-ELEMENTOS { background: rgba(245, 159, 0, 0.2); }
-.s-NAO-ATENDE { background: rgba(247, 103, 7, 0.22); }
+.s-ZERO-NO-MODELO { background: rgba(245, 159, 0, 0.2); }
+.s-FALTA-NO-MODELO { background: rgba(247, 103, 7, 0.22); }
+.s-REGRA-A-ESCREVER { background: rgba(134, 142, 150, 0.25); }
 .escolhida {
   background: var(--st-secondary-background-color, #f0f2f6);
   box-shadow: inset 3px 0 0 var(--st-primary-color, #ff4b4b);

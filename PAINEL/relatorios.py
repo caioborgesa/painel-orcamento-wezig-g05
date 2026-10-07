@@ -555,7 +555,7 @@ def aba_resumo(orcamento):
             st.metric(f"BDI {formatar_porcentagem(resumo['bdi'])}",
                       formatar_reais(resumo["total"] - resumo["custo_direto"]))
             st.metric("Total", formatar_reais(resumo["total"]))
-        st.metric("Servicos orcados", resumo["por_status"].get("ORCADO", 0))
+        st.metric("Servicos orcados", resumo["por_status"].get("COM CUSTO", 0))
         st.metric("Insumos distintos", resumo["insumos_distintos"])
 
     mostrar(montar_resumo(orcamento), "WEZIG resumo do orcamento.xlsx",
@@ -573,6 +573,20 @@ def aba_resumo(orcamento):
                   help="Tem quantidade, falta o preco de algum insumo")
         st.metric("Banco a definir", len(conferencia["linhas_banco_a_definir"]),
                   help="A linha ainda nao tem composicao escolhida (etapa 3)")
+
+    # Fora do escopo nao e pendencia: e limite declarado do trabalho. Fica
+    # numa linha separada das tres acima para nao ser lido como atraso.
+    fora_do_escopo = conferencia.get("linhas_fora_do_escopo", 0)
+    if fora_do_escopo:
+        st.info(
+            f"**{fora_do_escopo} linhas estao fora do escopo** — forro, "
+            "revestimento interno, granito, loucas e pontos de energia foram "
+            "modelados em INTERIORES e ELETRICA, e o escopo do orcamento e "
+            "EST, HID e ARQ. A quantidade existe; nao e trabalho pendente, e "
+            "premissa declarada. O motivo de cada linha esta no criterio da "
+            "regra, e o mapa completo em "
+            "`4 QUANTITATIVOS\\MAPA DE ATENDIMENTO ARQ`.",
+            icon=":material/call_split:")
 
     if conferencia["insumos_a_cotar"]:
         st.markdown("**Insumos a cotar** — cada um destes derruba o preco dos "

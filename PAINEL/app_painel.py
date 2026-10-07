@@ -299,9 +299,11 @@ with st.sidebar:
             f"{arquivo_do_orcamento.stem}  \n"
             f"{procedencia_do_banco['banco']} {procedencia_do_banco['referencia']} · "
             f"{procedencia_do_banco['uf']} · {procedencia_do_banco['regime'].lower()}  \n"
-            f"{resumo_do_orcamento['por_status'].get('ORCADO', 0)} servicos orcados · "
+            f"{resumo_do_orcamento['por_status'].get('COM CUSTO', 0)} com custo · "
+            f"{resumo_do_orcamento['por_status'].get('A MEDIR', 0)} a medir · "
+            f"{resumo_do_orcamento['por_status'].get('ZERO NO MODELO', 0)} zero no modelo · "
             f"{resumo_do_orcamento['por_status'].get('SEM PRECO', 0)} sem preco · "
-            f"{resumo_do_orcamento['por_status'].get('SEM QUANTIDADE', 0)} sem quantidade")
+            f"{resumo_do_orcamento['por_status'].get('FORA DO ESCOPO', 0)} fora do escopo")
     else:
         st.warning("Sem orcamento gerado. Rode GERAR ORCAMENTO.bat para ver o custo.",
                    icon=":material/payments:")
@@ -313,7 +315,7 @@ with st.sidebar:
     todos_status = sorted({linha["status"] for linha in linhas})
     status_escolhidos = st.multiselect(
         "Status", todos_status,
-        default=[s for s in todos_status if s != "SEM REGRA"])
+        default=[s for s in todos_status if s != "REGRA A ESCREVER"])
     macros = sorted({linha["macro"] for linha in linhas})
     macro_escolhido = st.selectbox("Macro-servico", ["Todos"] + macros)
     # O mesmo filtro vale para a arvore e para o 3D
@@ -512,6 +514,11 @@ with abas[0]:
                     elif linha["status_preco"] == "BANCO A DEFINIR":
                         st.caption(":red[Esta linha ainda nao tem composicao definida "
                                    "(BANCO = A DEFINIR na etapa 3)]")
+                    elif linha["status_preco"] == "FORA DO ESCOPO":
+                        # Azul, nao vermelho: nao e pendencia, e limite do trabalho
+                        st.caption(":blue[Fora do escopo do orcamento — a quantidade "
+                                   "existe no modelo de INTERIORES ou de ELETRICA. "
+                                   "O escopo acordado e EST, HID e ARQ.]")
                     else:
                         st.caption(f"{linha['banco']} {linha.get('referencia_do_banco')} · "
                                    f"{linha.get('uf')} · "
@@ -613,8 +620,19 @@ with abas[0]:
             # quem somou em alguma linha do ramo nao aparece como "zero"
             destacados_zero -= destacados
 
-        # Explica o que o 3D esta (ou nao esta) mostrando
-        modelos_da_escolha = {l.get("modelo") for l in linhas_em_destaque if l["contribuicoes"]}
+        # Explica o que o 3D esta (ou nao esta) mostrando.
+        # O campo 'modelo' da linha pode ser um nome ("EST") ou uma lista
+        # (["ARQ-0001", "ARQ-0002"], quando a regra mede nos dois modelos de
+        # arquitetura ao mesmo tempo), entao e preciso achatar antes.
+        modelos_da_escolha = set()
+        for l in linhas_em_destaque:
+            if not l["contribuicoes"]:
+                continue
+            modelo_da_linha = l.get("modelo")
+            if isinstance(modelo_da_linha, (list, tuple)):
+                modelos_da_escolha.update(modelo_da_linha)
+            elif modelo_da_linha:
+                modelos_da_escolha.add(modelo_da_linha)
         desligados = sorted(m for m in modelos_da_escolha if m in malhas and m not in modelos_ligados)
         if desligados and not mostrar_sem_regra:
             st.warning(f"Os elementos escolhidos estao no modelo {', '.join(desligados)}, "

@@ -86,10 +86,28 @@ MODELOS = {
     "EST": PASTA_TFM / "04 EST" / "1 MODELO"
            / "CRZ-CBE-ZZZ-ZZZ-M3-EST-0001 2026-09-13 06-45.IFC",
     "HID": PASTA_TFM / "05 HID" / "1 MODELO"
-           / "CRZ-EGZ-ZZZ-ZZZ-M3-HID-0001 2026-09-06 15-20.ifc",
-    "ARQ-0001": PASTA_CDE / "ABO - ARQ_2026-09-22_06-21-05am" / "ABO - ARQ"
+           / "CRZ-EGZ-ZZZ-ZZZ-M3-HID-0001 2026-10-04 08-15.ifc",
+    # Reexportados por CBE em 2026-10-03 a partir dos .rvt nativos baixados
+    # do CDE, que estao na pasta acima destes IFC. O padrao de exportacao
+    # esta em 03 GESTAO BIM\PADRAO DE EXPORTACAO IFC.
+    #
+    # Exportacao SEM "dividir paredes por nivel": as paredes ja foram
+    # modeladas pavimento a pavimento, entao o corte so quebrava cada
+    # parede em duas pecas (a fatia de 15 cm do contrapiso mais o trecho
+    # ate a viga) sem acrescentar informacao.
+    #
+    # 2026-10-07: nativo novo do CDE (NumberOfSaves 40->42 no ARQ-0001 e
+    # 69->75 no ARQ-0002), exportado por mim. A exportacao anterior, de
+    # 2026-10-03 1421, esta em 02 RECEBIDO CDE\_ARQUIVO.
+    # Na mesma data o CDE trouxe tambem os IFC exportados pela propria
+    # arquitetura (pasta "...01-46-12pm"): aqueles NAO servem para medir,
+    # porque saem sem a vista QuantityTakeOffAddOnView e portanto sem
+    # BaseQuantities. Ficam como registro do que foi publicado.
+    "ARQ-0001": PASTA_CDE / "ABO - ARQ_selecionado_2026-10-07_01-30-38pm"
+                / "IFC EXPORTADO CBE 2026-10-07 13-54"
                 / "CRZ-ABO-B01-ZZZ-M3-ARQ-0001.ifc",
-    "ARQ-0002": PASTA_CDE / "ABO - ARQ_2026-09-22_06-21-05am" / "ABO - ARQ"
+    "ARQ-0002": PASTA_CDE / "ABO - ARQ_selecionado_2026-10-07_01-30-38pm"
+                / "IFC EXPORTADO CBE 2026-10-07 13-54"
                 / "CRZ-ABO-B01-ZZZ-M3-ARQ-0002.ifc",
     "INT": PASTA_CDE / "ABO - INT_2026-09-01_07-33-56pm" / "ABO - INT"
            / "CRZ-ABO-B01-ZZZ-M3-INT-1001.ifc",
